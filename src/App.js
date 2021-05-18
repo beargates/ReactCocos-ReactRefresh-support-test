@@ -13,16 +13,20 @@ try {
     const React = require("react");
     const ReactDOM = require('react-dom')
     const debounce = require("lodash.debounce");
+    const A = require('./A').default;
+    const B = require('./B').default;
     let enqueueUpdate = debounce(RefreshRuntime.performReactRefresh, 30);
 
     function DOMApp() {
         console.log('dom app render');
-        return <div>DomApp 3</div>
+        return <div>DOM App<A/><B/></div>
     }
 
     ReactDOM.render(<DOMApp />, document.querySelector('#root'))
 
     const ReactCocos = require('./vendor/react-cocos').default
+    const ACocos = require('./A.cocos').default;
+    const BCocos = require('./B.cocos').default;
 
     const cc = window.cc;
     const options = {
@@ -47,8 +51,8 @@ try {
         );
     });
 
-    const Label = () => <node
-        name="Label"
+    const Label = ({name, y = 0, string, children}) => <node
+        name={name}
         components={[{
             type: window.cc.Widget,
             props: {
@@ -56,14 +60,16 @@ try {
                 isAlignLeft: true,
                 isAlignRight: true,
                 isAlignBottom: true,
+                top: -y,
             }
         }, {
             type: window.cc.Label,
             props: {
-                string: 'CocosApp 8',
+                string,
+                fontSize: 12,
             }
         }]}
-    />
+    >{children}</node>
 
     // class App extends React.Component{
     //   state = {n: 0}
@@ -81,7 +87,10 @@ try {
         // const [n, setN] = React.useState(0);
         console.log('cocos app render');
         return (
-            <Label />
+            <Label name="Root" string="Cocos App">
+                <ACocos c={Label} />
+                {/*<BCocos c={Label} />*/}
+            </Label>
         );
     };
     window.$RefreshReg$(App, "App");
@@ -91,13 +100,3 @@ try {
     window.$RefreshReg$ = prevRefreshReg;
     window.$RefreshSig$ = prevRefreshSig;
 }
-
-// function App() {
-//   console.log('test x');
-//   return (
-//       // <Label string="hello world xxxx"/>
-//       <div>div xxx</div>
-//   );
-// }
-
-// export default App;

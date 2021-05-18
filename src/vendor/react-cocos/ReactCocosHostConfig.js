@@ -43,12 +43,12 @@ export function resetAfterCommit(container) {
 
 export function createInstance(
     type,
-    props /*,
+    props,
     rootContainerInstance,
     hostContext,
-    internalInstanceHandle */
+    internalInstanceHandle
 ) {
-    debug('createInstance', type, props);
+    debug('createInstance', type, props, rootContainerInstance, hostContext, internalInstanceHandle);
     return createNode(type, props);
 }
 
